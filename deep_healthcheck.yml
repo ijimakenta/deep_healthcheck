@@ -1,0 +1,9 @@
+url:
+  - http://192.168.0.1:8983/solr/test1/admin/ping
+  - http://192.168.0.1:8080/
+postgres:
+  user: postgres
+  password: postgres
+  host: 192.168.0.1
+  dbname: postgres
+  sslmode: disable
