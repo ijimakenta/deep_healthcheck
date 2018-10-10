@@ -2,7 +2,8 @@
 負荷分散装置からのヘルスチェックに応答するAPI
 
 
-# systemd登録(CentOS7)
+# CentOS7
+・systemd
 cat <<'EOT' > /etc/systemd/system/deep_healthcheck.service
 [Unit]
 Description=deep_healthcheck service
@@ -19,11 +20,11 @@ WantedBy=multi-user.target
 EOT
 
 
-# ログ(CentOS7)
+・ログ
 cat <<EOT >/etc/rsyslog.d/deep_healthcheck.conf
 :programname, isequal, "deep_healthcheck" /var/log/deep_healthcheck.log
 & stop
 EOT
 
-# ログローテーション
+・ログローテーション
 sed -i '1i\/var\/log\/deep_healthcheck\.log' /etc/logrotate.d/syslog
