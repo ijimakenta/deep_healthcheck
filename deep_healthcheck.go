@@ -19,6 +19,7 @@ type Postgres struct {
   User      string `yaml:"user"`
   Password  string `yaml:"password"`
   Host      string `yaml:"host"`
+  Port      int    `yaml:"port"`
   DBname    string `yaml:"dbname"`
   SSLmode   string `yaml:"sslmode"`
 }
@@ -39,22 +40,22 @@ func handler(w http.ResponseWriter, r *http.Request) {
     resp, err := http.Get(c.URL[idx])
     if err != nil {
       fmt.Printf("%s NG\n", err.Error())
-  	}
+    }
 
     if resp.StatusCode != 200 {
       defer resp.Body.Close()
-      desc := fmt.Sprintf("URL: %s StatusCode: %s", c.URL[idx], resp.StatusCode)
+      desc := fmt.Sprintf("URL: %s StatusCode: %d", c.URL[idx], resp.StatusCode)
       fmt.Printf("%s NG\n",desc)
       flag = true
 
     } else {
       defer resp.Body.Close()
-      fmt.Printf("URL: %s StatusCocde: %s OK\n", c.URL[idx], resp.StatusCode)
+      fmt.Printf("URL: %s StatusCocde: %d OK\n", c.URL[idx], resp.StatusCode)
     }
   }
 
-  dbconnect := fmt.Sprintf("user=%s password=%s host=%s dbname=%s sslmode=%s",
-    c.Postgres.User ,c.Postgres.Password, c.Postgres.Host, c.Postgres.DBname, c.Postgres.SSLmode)
+  dbconnect := fmt.Sprintf("user=%s password=%s host=%s port=%d dbname=%s sslmode=%s",
+    c.Postgres.User ,c.Postgres.Password, c.Postgres.Host, c.Postgres.Port, c.Postgres.DBname, c.Postgres.SSLmode)
   db, err := sql.Open("postgres", dbconnect)
   if err != nil {
     fmt.Printf("%s NG\n", err.Error())
