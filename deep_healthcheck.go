@@ -28,7 +28,7 @@ var c Config
 
 var (
   listenAddress  = kingpin.Flag("listen-address", "Address on which to expose metrics and web interface.").Default(":1234").String()
-  configPath     = kingpin.Flag("config-path", "Path under which to yml path").Default("").String()
+  configPath     = kingpin.Flag("config-path", "Path under which to yml path").Default("./deep_healthcheck.yml").String()
   healthCheckUrl = kingpin.Flag("healthcheck-url", "Health check URL").Default("/health/check").String()
 )
 
@@ -40,18 +40,19 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
     resp, err := http.Get(c.URL[idx])
     if err != nil {
-      fmt.Printf("%s NG\n", err.Error())
+      fmt.Printf("%s [NG]\n", err)
+      flag = true
+      continue
     }
     defer resp.Body.Close()
 
-    if resp.StatusCode != 200 {
-      defer resp.Body.Close()
-      desc := fmt.Sprintf("URL: %s StatusCode: %d", c.URL[idx], resp.StatusCode)
-      fmt.Printf("%s NG\n",desc)
-      flag = true
+    if resp.StatusCode == 200 {
+      fmt.Printf("URL: %s StatusCode: %d [OK]\n", c.URL[idx], resp.StatusCode)
 
     } else {
-      fmt.Printf("URL: %s StatusCocde: %d OK\n", c.URL[idx], resp.StatusCode)
+      fmt.Printf("URL: %s StatusCode: %d [NG]\n", c.URL[idx], resp.StatusCode)
+      flag = true
+
     }
   }
 
@@ -59,23 +60,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
     c.Postgres.User ,c.Postgres.Password, c.Postgres.Host, c.Postgres.Port, c.Postgres.DBname, c.Postgres.SSLmode)
   db, err := sql.Open("postgres", dbconnect)
   if err != nil {
-    fmt.Printf("%s NG\n", err.Error())
+    fmt.Printf("%s [NG]\n", err)
     flag = true
-  }
-  defer db.Close()
-
-  rows, err := db.Query("select 1;")
-  if err != nil {
-    fmt.Printf("%s NG\n", err.Error())
-    flag = true
+    defer db.Close()
 
   } else {
-    for rows.Next() {
-      var data string
-      rows.Scan(&data)
-      fmt.Printf("Postgres: select 1; result:%s OK\n", data)
+    rows, err := db.Query("select 1;")
+    if err != nil {
+      fmt.Printf("%s [NG]\n", err)
+      flag = true
+
+    } else {
+      for rows.Next() {
+        var data string
+        rows.Scan(&data)
+        fmt.Printf("Postgres: select 1; result:%s [OK]\n", data)
+      }
+      defer rows.Close()
+
     }
-    defer rows.Close()
   }
 
   if flag == true {
