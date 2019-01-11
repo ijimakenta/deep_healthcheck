@@ -15,7 +15,7 @@ LISTENポート番号
 --healthcheck-url /health/check
 ```
 
-### systemd登録
+### systemd
 ```
 cat <<'EOT' > /etc/systemd/system/deep_healthcheck.service
 [Unit]
