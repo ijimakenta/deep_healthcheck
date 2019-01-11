@@ -1,5 +1,6 @@
 url:
   - http://10.0.0.4:30300/?orgId=1
+  - http://10.0.0.4:30090/graph
 postgres:
   user: postgres
   password: postgres
