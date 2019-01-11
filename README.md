@@ -43,7 +43,7 @@ systemctl restart rsyslog.service
 ### logrotate
 ```
 cat <<EOT >/etc/logrotate.d/deep_healthcheck
-/data/s01/deep_healthcheck/log/deep_healthcheck.log
+/usr/local/deep_healthcheck/log/deep_healthcheck.log
 {
   daily
   rotate 31
