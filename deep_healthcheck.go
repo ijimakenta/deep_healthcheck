@@ -29,6 +29,7 @@ var c Config
 var (
   listenAddress  = kingpin.Flag("listen-address", "Address on which to expose metrics and web interface.").Default(":1234").String()
   configPath     = kingpin.Flag("config-path", "Path under which to yml path").Default("").String()
+  healthCheckUrl = kingpin.Flag("healthcheck-url", "Health check URL").Default("/health/check").String()
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -41,6 +42,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
     if err != nil {
       fmt.Printf("%s NG\n", err.Error())
     }
+    defer resp.Body.Close()
 
     if resp.StatusCode != 200 {
       defer resp.Body.Close()
@@ -49,7 +51,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
       flag = true
 
     } else {
-      defer resp.Body.Close()
       fmt.Printf("URL: %s StatusCocde: %d OK\n", c.URL[idx], resp.StatusCode)
     }
   }
@@ -91,7 +92,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
   kingpin.Parse()
-  fmt.Printf("listen address: %s, configration path: %s\n", *listenAddress, *configPath)
+  fmt.Printf("listen address: %s, configration path: %s, health check url: %s\n", *listenAddress, *configPath, *healthCheckUrl)
 
   source, err := ioutil.ReadFile(*configPath)
   if err != nil {
@@ -105,6 +106,6 @@ func main() {
   }
   fmt.Printf("Value: %+v\n", c)
 
-  http.HandleFunc("/health/check", handler)
+  http.HandleFunc(*healthCheckUrl, handler)
   http.ListenAndServe(*listenAddress, nil)
 }
