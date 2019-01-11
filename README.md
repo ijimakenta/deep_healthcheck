@@ -6,6 +6,10 @@
 コンフィグパス指定
 --config-path deep_healthcheck.yml
 
-LISTEN
+LISTENポート番号
 --listen-address 1234
+
+ヘルスチェックURL
+--healthcheck-url /health/check
+
 ```
