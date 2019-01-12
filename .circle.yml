@@ -1,9 +1,9 @@
-version: 2
+version: 2.1
 jobs:
   build:
     working_directory: /go/src/github.com/ijimakenta/deep_healthcheck
     docker:
-      - image: circleci/golang:latest
+      - image: circleci/golang:1.11
     steps:
       - checkout
       - run: go get github.com/lib/pq
