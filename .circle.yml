@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/ijimakenta/deep_healthcheck
+    docker:
+      - image: circleci/golang:latest
+    steps:
+      - checkout
+      - run: go get github.com/lib/pq
+      - run: go get gopkg.in/alecthomas/kingpin.v2
+      - run: go get gopkg.in/yaml.v2
+      - run: go fmt $(go list ./... | grep -v /vendor/)
+      - run: go vet $(go list ./... | grep -v /vendor/)
+      - run: go test -race $(go list ./... | grep -v /vendor/)
