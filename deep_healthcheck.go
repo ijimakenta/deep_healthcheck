@@ -84,9 +84,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
   }
 
   if flag == true {
-      fmt.Println("Health check NG")
-      http.Error(w, "Health check NG", http.StatusInternalServerError)
-      return
+    fmt.Println("Health check NG")
+    http.Error(w, "Health check NG", http.StatusInternalServerError)
+    return
   }
 
   fmt.Println("Health check OK")
