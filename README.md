@@ -25,6 +25,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/local/deep_healthcheck/deep_healthcheck
+  --config-path /usr/local/deep_healthcheck/deep_healthcheck.yml
 Restart=always
 
 [Install]
