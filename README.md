@@ -9,7 +9,7 @@ OKの時はhttp応答コード200、NGの時はhttp応答コード500 で応答�
 --config-path deep_healthcheck.yml
 
 LISTENポート番号
---listen-address 1234
+--listen-address :1234
 
 ヘルスチェックURL
 --healthcheck-url /health/check
